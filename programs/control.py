@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-from datetime import datetime
+import time
 
 # mqtt broker configuration 
 MQTT_BROKER = "192.168.178.22"
@@ -20,24 +20,24 @@ PUMP_PH_TOPIC = "insert/topic"
 
 received_data = {}
 class Data:
-	def __init__(self, tds=None, ph=None):
-		self.tds = tds
-		self.ph = ph
+    def __init__(self, tds=None, ph=None):
+        self.tds = tds
+        self.ph = ph
 
-	def control(self):
+    def control(self):
         """Check values and publish MQTT control commands."""
         if self.tds is not None and self.tds <= 1000:
             print("Activating TDS pump (tds < 1000)")
             self.client.publish(PUMP_TDS_TOPIC, "ON", qos=2)
-			time.sleep(3)
-			self.client.publish(PUMP_TDS_TOPIC, "OFF", qos=2)
+            time.sleep(3)
+            self.client.publish(PUMP_TDS_TOPIC, "OFF", qos=2)
 
         if self.ph is not None and self.ph <= 4:
             print("Activating pH pump (ph < 4)")
             self.client.publish(PUMP_PH_TOPIC, "ON", qos=2)
-			time.sleep(3)
+            time.sleep(3)
             self.client.publish(PUMP_PH_TOPIC, "OFF", qos=2)
-	
+
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("Connected to MQTT broker.")
@@ -48,12 +48,12 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client,userdata,message):
     value = message.payload.decode()
-	topic = message.topic
-	received_message[topic]=value
-	
+    topic = message.topic
+    received_data[topic]=value
+
 
 # Create MQTT client
-client = mqtt.Client(callback_api_version=1)
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION1)
 client.on_connect = on_connect
 client.on_message = on_message
 client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
