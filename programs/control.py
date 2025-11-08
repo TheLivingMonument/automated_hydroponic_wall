@@ -64,6 +64,7 @@ client.loop_start()
 print("Waiting, for MQTT connection...\n")
 time.sleep(5)
 
+print(f"Received data: {received_data}")
 tds_value = float(received_data.get("TDS", 9999))
 ph_value = float(received_data.get("pH",7))
 
