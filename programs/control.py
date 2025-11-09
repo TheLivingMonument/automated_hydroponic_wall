@@ -28,15 +28,15 @@ class Data:
         """Check values and publish MQTT control commands."""
         if self.tds is not None and self.tds <= 1000:
             print("Activating TDS pump (tds < 1000)")
-            self.client.publish(PUMP_TDS_TOPIC, "ON", qos=2)
+            self.client.publish(PUMP_TDS_TOPIC, "ON", qos=1)
             time.sleep(3)
-            self.client.publish(PUMP_TDS_TOPIC, "OFF", qos=2)
+            self.client.publish(PUMP_TDS_TOPIC, "OFF", qos=1)
 
         if self.ph is not None and self.ph <= 4:
             print("Activating pH pump (ph < 4)")
-            self.client.publish(PUMP_PH_TOPIC, "ON", qos=2)
+            self.client.publish(PUMP_PH_TOPIC, "ON", qos=1)
             time.sleep(3)
-            self.client.publish(PUMP_PH_TOPIC, "OFF", qos=2)
+            self.client.publish(PUMP_PH_TOPIC, "OFF", qos=1)
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
